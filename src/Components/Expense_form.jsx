@@ -163,6 +163,7 @@ export default function ExpenseTracker() {
             {warningMessage && <p className="warning-message">{warningMessage}</p>}
 
             {/* Sorting Options */}
+            <hr></hr>
             <div className="sort-options">
                 <label htmlFor="sort">Sort By:</label>
                 <select id="sort" value={sortCriteria} onChange={handleSortChange} className="input">
