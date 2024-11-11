@@ -1,0 +1,95 @@
+import { useState } from 'react'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
+type Expense = {
+  category: string
+  amount: number
+  date: string
+}
+
+export default function ExpenseTracker() {
+  const [expenses, setExpenses] = useState<Expense[]>([])
+  const [category, setCategory] = useState('')
+  const [amount, setAmount] = useState('')
+  const [date, setDate] = useState('')
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (category && amount && date) {
+      const newExpense: Expense = {
+        category,
+        amount: parseFloat(amount),
+        date
+      }
+      setExpenses([...expenses, newExpense])
+      setCategory('')
+      setAmount('')
+      setDate('')
+    }
+  }
+
+  return (
+    <div className="max-w-md mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-4">Expense Tracker</h1>
+      <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+        <div>
+          <Label htmlFor="category">Category</Label>
+          <Select value={category} onValueChange={setCategory}>
+            <SelectTrigger id="category">
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="food">Food</SelectItem>
+              <SelectItem value="transportation">Transportation</SelectItem>
+              <SelectItem value="utilities">Utilities</SelectItem>
+              <SelectItem value="entertainment">Entertainment</SelectItem>
+              <SelectItem value="other">Other</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label htmlFor="amount">Amount</Label>
+          <Input
+            type="number"
+            id="amount"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="Enter amount"
+            step="0.01"
+            min="0"
+            required
+          />
+        </div>
+        <div>
+          <Label htmlFor="date">Date</Label>
+          <Input
+            type="date"
+            id="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            required
+          />
+        </div>
+        <Button type="submit">Add Expense</Button>
+      </form>
+      <div>
+        <h2 className="text-xl font-semibold mb-2">Expense List</h2>
+        {expenses.length === 0 ? (
+          <p>No expenses added yet.</p>
+        ) : (
+          <ul className="space-y-2">
+            {expenses.map((expense, index) => (
+              <li key={index} className="border p-2 rounded">
+                <span className="font-medium">{expense.category}</span>: $
+                {expense.amount.toFixed(2)} on {expense.date}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  )
+}
